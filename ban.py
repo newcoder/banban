@@ -9,11 +9,14 @@ columns = ['date', 'open', 'low', 'high', 'close', 'volume', 'amount']
 
 def get_bans(path):
     records = pd.read_table(path, sep=',', header=0, names=columns)
-    records['prev_close'] = records.close.shift(1)
-    records['limit_up'] = records['prev_close'] * limitup
-    records['limit_down'] = records['prev_close'] * limitdown
-    records['change'] = 100*(records['close'] - records['prev_close']) / records['prev_close']
+    records.loc[:,'prev_close'] = records.close.shift(1)
+    records.loc[:,'limit_up'] = records['prev_close'] * limitup
+    records.loc[:,'limit_down'] = records['prev_close'] * limitdown
+    records.loc[:,'change'] = 100*(records['close'] - records['prev_close']) / records['prev_close']
 
+    records.loc[:,'close'] = records['close'].map(lambda x: round(x, 2))
+    records.loc[:,'limit_up'] = records['limit_up'].map(lambda x: round(x, 2))
+    records.loc[:,'limit_down'] = records['limit_down'].map(lambda x: round(x, 2))
     up_bans = records[records['close'] >= records['limit_up']]
     down_bans = records[records['close'] <= records['limit_down']]
 
