@@ -4,7 +4,7 @@ import pandas as pd
 
 limitup = 1.1
 limitdown = 0.9
-tor = 0.0005
+tor = 0.005
 columns = ['date', 'open', 'low', 'high', 'close', 'volume', 'amount']
 
 def is_valid(df):
@@ -55,3 +55,39 @@ def get_bans_dir(dir):
             print file + ' done!'
     results = pd.concat(dflist).sort_values(by=['symbol', 'date'])
     return nums, results
+
+def get_all_bans():
+    sh_nums, sh_bans = get_bans_dir("data\\SH")
+    sz_nums, sz_bans = get_bans_dir("data\\SZ")
+    return sum(sh_nums) + sum(sz_nums), pd.concat([sh_bans, sz_bans]).reset_index(drop=True)
+
+def count_by_date(bans):
+    datesymbol= bans[list(['symbol','date', 'change'])]
+    countbydate = datesymbol.groupby('date').count()
+    countbydate.sort_values(by='symbol', inplace=True, ascending=False)
+    return countbydate
+
+def gf_last_digit(df, ind, col):
+    value = df[col].loc[ind]
+    return value[-1]
+
+def gf_up_down(df, ind, col):
+    if (df[col].loc[ind] > 0):
+        return 'UP'
+    else:
+        return 'DOWN'
+
+def group_by_last_digit(bans):
+    return bans.groupby(lambda x: gf_last_digit(bans, x, 'symbol'))
+
+def group_by_up_down(bans):
+    return bans.groupby(lambda x: gf_up_down(bans, x, 'change'))
+
+def group_by_last_digit_up_down(bans):
+    return bans.groupby([lambda x: gf_last_digit(bans, x, 'symbol'), lambda x: gf_up_down(bans, x, 'change')])
+
+def count_by_date_up_down(bans):
+    datesymbol= bans[list(['symbol','date', 'change'])]
+    countbydate = datesymbol.groupby(['date', lambda x: gf_up_down(bans, x, 'change')]).count()
+    countbydate.sort_values(by=['symbol'], inplace=True, ascending=False)
+    return countbydate
