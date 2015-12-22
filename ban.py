@@ -91,3 +91,6 @@ def count_by_date_up_down(bans):
     countbydate = datesymbol.groupby(['date', lambda x: gf_up_down(bans, x, 'change')]).count()
     countbydate.sort_values(by=['symbol'], inplace=True, ascending=False)
     return countbydate
+
+def export(bans, file):
+    bans.sort_values(by='date').reset_index(drop=True).to_csv(file)
