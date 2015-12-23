@@ -20,6 +20,8 @@ def get_bans(path):
     records.loc[:,'prev_close'] = records['prev_close'].map(lambda x: round(x, 2))
     records.loc[:,'next_close'] = records.close.shift(-1)
     records.loc[:,'next_close'] = records['next_close'].map(lambda x: round(x, 2))
+    records.loc[:,'prev2_close'] = records.close.shift(2)
+    records.loc[:,'prev2_close'] = records['prev2_close'].map(lambda x: round(x, 2))
     records.loc[:,'close'] = records['close'].map(lambda x: round(x, 2))
     records.loc[:,'limit_up'] = records['prev_close'] * limitup
     records.loc[:,'limit_down'] = records['prev_close'] * limitdown
@@ -27,6 +29,7 @@ def get_bans(path):
     records.loc[:,'limit_down'] = records['limit_down'].map(lambda x: round(x*(1.0 + tor), 2))
     records.loc[:,'percent'] = 100*(records['close'] - records['prev_close']) / records['prev_close']
     records.loc[:,'next_percent'] = 100*(records['next_close'] - records['close']) / records['close']
+    records.loc[:,'prev_percent'] = 100*(records['prev_close'] - records['prev2_close']) / records['prev2_close']
 
     up_bans = records[records['close'] >= records['limit_up']]
     down_bans = records[records['close'] <= records['limit_down']]
@@ -97,3 +100,22 @@ def count_by_date_up_down(bans):
 
 def export(bans, file):
     bans.sort_values(by='date').reset_index(drop=True).to_csv(file)
+
+def next_day_performance(bans):
+    up = bans[bans['percent'] > 0]
+    upup = up[up['next_percent'] >= 0]
+    p1 = len(upup) / float(len(up))
+    down = bans[bans['percent'] < 0]
+    downdown = down[down['next_percent'] <= 0]
+    p2 = len(downdown) / float(len(down))
+    return (p1, p2)
+
+def bans_by_amp(bans, amp, tor = 0.01):
+    """ get bans with amp as threshold
+    """
+    return bans[abs(bans['kbody']) + abs(bans['kshadow']) < amp + tor]
+
+def next_day_perf_by_amp(bans, n=10):
+    perfs = [(amp, next_day_performance(bans_by_amp(bans, amp))) for amp in range(n)]
+    return perfs
+
