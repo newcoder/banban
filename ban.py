@@ -4,7 +4,7 @@ import pandas as pd
 
 limitup = 1.1
 limitdown = 0.9
-tor = 0.0005
+tor = 0.005
 columns = ['date', 'open', 'low', 'high', 'close', 'volume', 'amount']
 
 def is_valid(df):
@@ -18,12 +18,18 @@ def get_bans(path):
 
     records.loc[:,'prev_close'] = records.close.shift(1)
     records.loc[:,'prev_close'] = records['prev_close'].map(lambda x: round(x, 2))
+    records.loc[:,'next_close'] = records.close.shift(-1)
+    records.loc[:,'next_close'] = records['next_close'].map(lambda x: round(x, 2))
+    records.loc[:,'prev2_close'] = records.close.shift(2)
+    records.loc[:,'prev2_close'] = records['prev2_close'].map(lambda x: round(x, 2))
     records.loc[:,'close'] = records['close'].map(lambda x: round(x, 2))
     records.loc[:,'limit_up'] = records['prev_close'] * limitup
     records.loc[:,'limit_down'] = records['prev_close'] * limitdown
     records.loc[:,'limit_up'] = records['limit_up'].map(lambda x: round(x*(1.0 - tor), 2))
     records.loc[:,'limit_down'] = records['limit_down'].map(lambda x: round(x*(1.0 + tor), 2))
-    records.loc[:,'change'] = 100*(records['close'] - records['prev_close']) / records['prev_close']
+    records.loc[:,'percent'] = 100*(records['close'] - records['prev_close']) / records['prev_close']
+    records.loc[:,'next_percent'] = 100*(records['next_close'] - records['close']) / records['close']
+    records.loc[:,'prev_percent'] = 100*(records['prev_close'] - records['prev2_close']) / records['prev2_close']
 
     up_bans = records[records['close'] >= records['limit_up']]
     down_bans = records[records['close'] <= records['limit_down']]
@@ -55,3 +61,61 @@ def get_bans_dir(dir):
             print file + ' done!'
     results = pd.concat(dflist).sort_values(by=['symbol', 'date'])
     return nums, results
+
+def get_all_bans():
+    sh_nums, sh_bans = get_bans_dir("data\\SH")
+    sz_nums, sz_bans = get_bans_dir("data\\SZ")
+    return sum(sh_nums) + sum(sz_nums), pd.concat([sh_bans, sz_bans]).reset_index(drop=True)
+
+def count_by_date(bans):
+    datesymbol= bans[list(['symbol','date', 'percent'])]
+    countbydate = datesymbol.groupby('date').count()
+    countbydate.sort_values(by='symbol', inplace=True, ascending=False)
+    return countbydate
+
+def gf_last_digit(df, ind, col):
+    value = df[col].loc[ind]
+    return value[-1]
+
+def gf_up_down(df, ind, col):
+    if (df[col].loc[ind] > 0):
+        return 'UP'
+    else:
+        return 'DOWN'
+
+def group_by_last_digit(bans):
+    return bans.groupby(lambda x: gf_last_digit(bans, x, 'symbol'))
+
+def group_by_up_down(bans):
+    return bans.groupby(lambda x: gf_up_down(bans, x, 'percent'))
+
+def group_by_last_digit_up_down(bans):
+    return bans.groupby([lambda x: gf_last_digit(bans, x, 'symbol'), lambda x: gf_up_down(bans, x, 'percent')])
+
+def count_by_date_up_down(bans):
+    datesymbol= bans[list(['symbol','date', 'percent'])]
+    countbydate = datesymbol.groupby(['date', lambda x: gf_up_down(bans, x, 'percent')]).count()
+    countbydate.sort_values(by=['symbol'], inplace=True, ascending=False)
+    return countbydate
+
+def export(bans, file):
+    bans.sort_values(by='date').reset_index(drop=True).to_csv(file)
+
+def next_day_performance(bans):
+    up = bans[bans['percent'] > 0]
+    upup = up[up['next_percent'] >= 0]
+    p1 = len(upup) / float(len(up))
+    down = bans[bans['percent'] < 0]
+    downdown = down[down['next_percent'] <= 0]
+    p2 = len(downdown) / float(len(down))
+    return (p1, p2)
+
+def bans_by_amp(bans, amp, tor = 0.01):
+    """ get bans with amp as threshold
+    """
+    return bans[abs(bans['kbody']) + abs(bans['kshadow']) < amp + tor]
+
+def next_day_perf_by_amp(bans, n=10):
+    perfs = [(amp, next_day_performance(bans_by_amp(bans, amp))) for amp in range(n)]
+    return perfs
+
