@@ -24,7 +24,10 @@ GRUB_TIMEOUT_STYLE=hidden
 GRUB_HIDDEN_TIMEOUT=0
 GRUB_HIDDEN_TIMEOUT_QUIET=true
 GRUB_DISABLE_OS_PROBER=true  #关键是这个参数
-修改完后，运行grub-update
+```
+修改完后，运行
+```
+grub-update
 reboot
 ```
 grub 引导菜单不再出来。
