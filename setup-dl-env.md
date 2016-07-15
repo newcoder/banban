@@ -36,11 +36,12 @@ grub 引导菜单不再出来。
 - 输入你的账户名和密码
 - 依次运行如下语句：
 
-sudo apt-get purge nvidia*
-sudo add-apt-repository ppa:graphics-drivers/ppa
-sudo apt-get update
-sudo apt-get install nvidia-367.
-reboot //重启
+`$ sudo apt-get purge nvidia*`
+`$ sudo add-apt-repository ppa:graphics-drivers/ppa`
+`$ sudo apt-get update`
+`$ sudo apt-get install nvidia-367`
+`$ reboot`
+//重启
 
 - 重启后问题就可以正常进入系统了，慢着，还没有，
 
@@ -50,7 +51,7 @@ Ubuntu16.04任务栏与启动器消失了
 compiz是基于 OpenGL的混合型窗口管理器，通俗一点理解，就是可以在Linux桌面系统内提供类似于Vista和Mac OS的3D桌面效果。
 使用以下命令：
 重置compiz，在桌面上点右键菜单，打开一个terminal，运行：
-dconf reset -f /org/compiz/
+`dconf reset -f /org/compiz/`
 
 ubuntu 里的显卡驱动安装好以后，可以从核显切换回使用显卡了。
 
@@ -61,17 +62,17 @@ ubuntu 里的显卡驱动安装好以后，可以从核显切换回使用显卡�
 选择不覆盖现有的驱动。
 
 设置路径：
-$ export PATH=/usr/local/cuda-8.0/bin:$PATH
-$ export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:$LD_LIBRARY_PATH
+`$ export PATH=/usr/local/cuda-8.0/bin:$PATH`
+`$ export LD_LIBRARY_PATH=/usr/local/cuda-8.0/lib64:$LD_LIBRARY_PATH`
 
 并且把路径添加到.bashrc
 
 - 安装cuDNN v5
 下载安装包，解压
-$ cd folder/extracted/contents
-$ sudo cp -P include/cudnn.h /usr/include
-$ sudo cp -P lib64/libcudnn* /usr/lib/x86_64-linux-gnu/
-$ sudo chmod a+r /usr/lib/x86_64-linux-gnu/libcudnn*
+`$ cd folder/extracted/contents`
+`$ sudo cp -P include/cudnn.h /usr/include`
+`$ sudo cp -P lib64/libcudnn* /usr/lib/x86_64-linux-gnu/`
+`$ sudo chmod a+r /usr/lib/x86_64-linux-gnu/libcudnn*`
 
 - 设置 cnMeM
 [lib]
@@ -83,8 +84,10 @@ cnmem = 0.9
 
 
 ## 安装 keras, theano
-pip install keras
-这个比较顺利，装完之后可以运行 import theano测试一下。
+`pip install keras`
+这个比较顺利，装完之后可以运行 
+`>>> import theano`
+测试一下。
 
 修改~/.theanorc
 [cuda]
@@ -104,9 +107,9 @@ floatX = float32
 
 cuDNN影响很大，有cuDNN速度要提高一倍左右。
 
-在ubuntu上还跑了一下 .\nbody -benchmark -numbodies=256000
-5900 Gflop/s
-windows 10上跑只有4800 Gflop/s
+还跑了一下nbody:
+`.\nbody -benchmark -numbodies=256000`
+ubuntu 16: 5900 Gflop/s, windows 10: 4800 Gflop/s
 
 ## 安装Tensorflow
 Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做，其它的用来比较。cntk虽然有一点速度的优势，但是介于配置和脚本之间的brainscript还是不舒服，直接用python表达比较方便。
@@ -114,7 +117,8 @@ Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做
 接下来安装Tensorflow。。。
 
 Tensorflow从源代码安装，因为要支持新版本的cuDNN。
-Bazel安装好了。Bazel设计的不错，模型很干净，下次可以在项目中用。
+Bazel安装好了。
+Bazel设计的不错，模型很干净，下次可以在项目中用。
 
 Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必须上VPN了。
 
@@ -122,8 +126,8 @@ Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必�
 ## 安装无线网卡
 8192eu
 
-http://blog.csdn.net/hobertony_7/article/details/45071875
-https://sites.google.com/site/easylinuxtipsproject/reserve-7
+[](http://blog.csdn.net/hobertony_7/article/details/45071875)
+[](https://sites.google.com/site/easylinuxtipsproject/reserve-7)
 
 wicd 打开后能扫描出wifi热点，能通过密码认证，但是在obtaining IP address。。。一直没有返回，还要继续折腾。。。
 
