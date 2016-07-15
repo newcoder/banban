@@ -102,11 +102,14 @@ pip install keras
 测试一下。
 
 修改~/.theanorc
+```
 [cuda]
 root = /usr/local/cuda-8.0
+
 [global]
 device = gpu0
 floatX = float32
+```
 等等一些运行中常用的配置，都可以放在这里。
 
 测试运行了一下keras/examples/mnist_cnn.py
@@ -126,7 +129,7 @@ cuDNN影响很大，有cuDNN速度要提高一倍左右。
 ubuntu 16: 5900 Gflop/s, windows 10: 4800 Gflop/s
 
 ## 安装Tensorflow
-Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做，其它的用来比较。cntk虽然有一点速度的优势，但是介于配置和脚本之间的brainscript还是不舒服，直接用python表达比较方便。
+Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做，其它的用来比较。CNTK虽然有一点速度的优势，但是介于配置和脚本之间的brainscript还是不舒服，直接用python表达比较方便。
 另一方面还是基于对Google的信任。
 接下来安装Tensorflow。。。
 
@@ -140,8 +143,8 @@ Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必�
 ## 安装无线网卡
 8192eu 芯片
 
-[](http://blog.csdn.net/hobertony_7/article/details/45071875)
-[](https://sites.google.com/site/easylinuxtipsproject/reserve-7)
+[http://blog.csdn.net/hobertony_7/article/details/45071875](http://blog.csdn.net/hobertony_7/article/details/45071875)
+[https://sites.google.com/site/easylinuxtipsproject/reserve-7](https://sites.google.com/site/easylinuxtipsproject/reserve-7)
 
 wicd 打开后能扫描出wifi热点，能通过密码认证，但是在obtaining IP address。。。一直没有返回，还要继续折腾。。。
 
