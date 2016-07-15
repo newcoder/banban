@@ -17,6 +17,7 @@
 
 - 隐藏GRUB引导菜单
 EasyBCD引导出来后，选择ubuntu，这个时候，grub又来引导一下，很累赘，所以想skip grub menu，修改/etc/default/grub:
+```
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=0
 GRUB_TIMEOUT_STYLE=hidden
@@ -25,6 +26,7 @@ GRUB_HIDDEN_TIMEOUT_QUIET=true
 GRUB_DISABLE_OS_PROBER=true  #关键是这个参数
 修改完后，运行grub-update
 reboot
+```
 grub 引导菜单不再出来。
 
 ## ubuntu安装nvidia driver
@@ -143,8 +145,8 @@ Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必�
 ## 安装无线网卡
 8192eu 芯片
 
-[http://blog.csdn.net/hobertony_7/article/details/45071875](http://blog.csdn.net/hobertony_7/article/details/45071875)
-[https://sites.google.com/site/easylinuxtipsproject/reserve-7](https://sites.google.com/site/easylinuxtipsproject/reserve-7)
+[http://blog.csdn.net/hobertony_7/article/details/45071875](http://blog.csdn.net/hobertony_7/article/details/45071875)  
+[https://sites.google.com/site/easylinuxtipsproject/reserve-7](https://sites.google.com/site/easylinuxtipsproject/reserve-7)  
 
 wicd 打开后能扫描出wifi热点，能通过密码认证，但是在obtaining IP address。。。一直没有返回，还要继续折腾。。。
 
