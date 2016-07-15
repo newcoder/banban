@@ -27,8 +27,8 @@ GRUB_DISABLE_OS_PROBER=true  #关键是这个参数
 ```
 修改完后，运行
 ```
-grub-update
-reboot
+$ grub-update
+$ reboot
 ```
 grub 引导菜单不再出来。
 
@@ -98,7 +98,7 @@ cnmem = 0.9
 
 ## 安装 keras, theano
 ```
-pip install keras
+$ pip install keras
 ```
 这个比较顺利，装完之后可以运行 
 ```
@@ -129,7 +129,7 @@ cuDNN影响很大，有cuDNN速度要提高一倍左右。
 
 还跑了一下nbody:
 ```
-.\nbody -benchmark -numbodies=256000
+$ ./nbody -benchmark -numbodies=256000
 ```
 ubuntu 16: 5900 Gflop/s, windows 10: 4800 Gflop/s
 
