@@ -27,8 +27,8 @@ GRUB_DISABLE_OS_PROBER=true  #关键是这个参数
 ```
 修改完后，运行
 ```
-grub-update
-reboot
+$ grub-update
+$ reboot
 ```
 grub 引导菜单不再出来。
 
@@ -98,7 +98,7 @@ cnmem = 0.9
 
 ## 安装 keras, theano
 ```
-pip install keras
+$ pip install keras
 ```
 这个比较顺利，装完之后可以运行 
 ```
@@ -129,20 +129,24 @@ cuDNN影响很大，有cuDNN速度要提高一倍左右。
 
 还跑了一下nbody:
 ```
-.\nbody -benchmark -numbodies=256000
+$ ./nbody -benchmark -numbodies=256000
 ```
 ubuntu 16: 5900 Gflop/s, windows 10: 4800 Gflop/s
 
 ## 安装Tensorflow
-Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做，其它的用来比较。CNTK虽然有一点速度的优势，但是介于配置和脚本之间的brainscript还是不舒服，直接用python表达比较方便。
-另一方面还是基于对Google的信任。
-接下来安装Tensorflow。。。
+Tensorflow是要重点研究的，以后大部分的工作会在Tensorflow上做，其它的用来比较。CNTK虽然有一点速度的优势，但是介于配置和脚本之间的brainscript还是不舒服，直接用python表达比较方便。  
+另一方面还是基于对Google的信任。  
+接下来安装Tensorflow。。。  
 
-Tensorflow从源代码安装，因为要支持新版本的cuDNN。
-Bazel安装好了。
-Bazel设计的不错，模型很干净，下次可以在项目中用。
+Tensorflow从源代码安装，因为要支持新版本的cuDNN。  
+Bazel安装好了。  
+Bazel设计的不错，模型很干净，下次可以在项目中用。  
 
-Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必须上VPN了。
+bazel 在 git clone protobuf, grpc等等这几个repo的时候一直中断，不稳定，折腾好久还是不行。  
+Github 不给力啊，速度太慢了，而且老是断，没法玩了。。必须上VPN了。  
+
+还是上了VPN后才搞定。
+GreenVPN也有个坑（东方有线的宽带，根本就不能连上国外的VPN服务器。。）翻墙是不行了，不过连上一个上海的VPN服务器后，结果居然解决了这个问题，bazel顺利拿下了所有依赖的repo，编译成功。  
 
 
 ## 安装无线网卡
